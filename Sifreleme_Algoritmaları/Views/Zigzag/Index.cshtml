@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Zigzag Şifreleme";
+}
+
+<h1>Zigzag Şifreleme</h1>
+
+<form asp-controller="Zigzag" asp-action="Encrypt" method="post">
+    <div class="form-group">
+        <label for="inputText">Metin:</label>
+        <textarea class="form-control" id="inputText" name="inputText" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="depth">Derinlik:</label>
+        <input type="number" class="form-control" id="depth" name="depth" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Şifrele</button>
+</form>
+
+<form asp-controller="Zigzag" asp-action="Decrypt" method="post">
+    <div class="form-group">
+        <label for="encryptedText">Şifreli Metin:</label>
+        <textarea class="form-control" id="encryptedText" name="encryptedText" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="depth">Derinlik:</label>
+        <input type="number" class="form-control" id="depth" name="depth" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Şifreyi Çöz</button>
+</form>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+@if (ViewData["EncryptedText"] != null)
+{
+    <div class="mt-3">
+        <h2>Şifrelenmiş Metin:</h2>
+        <p>@ViewData["EncryptedText"]</p>
+    </div>
+}
+
+@if (ViewData["DecryptedText"] != null)
+{
+    <div class="mt-3">
+        <h2>Çözülmüş Metin:</h2>
+        <p>@ViewData["DecryptedText"]</p>
+    </div>
+}

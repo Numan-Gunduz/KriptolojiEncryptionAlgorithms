@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Sezar Şifreleme";
+}
+
+<h1>Sezar Şifreleme</h1>
+
+<form asp-controller="Sezar" asp-action="Encrypt" method="post">
+    <div class="form-group">
+        <label for="inputText">Metin:</label>
+        <textarea class="form-control" id="inputText" name="inputText" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="key">Anahtar:</label>
+        <input type="number" class="form-control" id="key" name="key" min="0" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Şifrele</button>
+</form>
+<h2>Deşifrele</h2>
+<form asp-controller="Sezar" asp-action="Decrypt" method="post">
+    <div class="form-group">
+        <label for="encryptedText">Şifrelenmiş Metin:</label>
+        <textarea class="form-control" id="encryptedText" name="encryptedText" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="decryptionKey">Anahtar:</label>
+        <input type="number" class="form-control" id="decryptionKey" name="key" min="0" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Deşifrele</button>
+</form>
+<!-- Hata Mesajı -->
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+<!-- Şifrelenmiş Metin ve Deşifrelenmiş Metin -->
+@if (ViewData["EncryptedText"] != null)
+{
+    <div class="mt-3">
+        <h2>Şifrelenmiş Metin:</h2>
+        <p>@ViewData["EncryptedText"]</p>
+    </div>
+}
+@if (ViewData["DecryptedText"] != null)
+{
+    <div class="mt-3">
+        <h2>Deşifrelenmiş Metin:</h2>
+        <p>@ViewData["DecryptedText"]</p>
+    </div>
+}

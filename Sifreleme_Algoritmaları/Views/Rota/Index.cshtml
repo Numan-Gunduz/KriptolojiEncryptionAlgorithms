@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Rota Şifreleme";
+}
+
+<h1>Rota Şifreleme</h1>
+
+<h3>Şifreleme</h3>
+<form asp-controller="Rota" asp-action="Encrypt" method="post">
+    <div class="form-group">
+        <label for="plaintext">Metin:</label>
+        <input type="text" class="form-control" id="plaintext" name="plaintext" required>
+    </div>
+    <div class="form-group">
+        <label for="key">Anahtar:</label>
+        <input type="number" class="form-control" id="key" name="key" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Şifrele</button>
+</form>
+
+@if (ViewData["Ciphertext"] != null)
+{
+    <div class="mt-3">
+        <h4>Şifrelenmiş Metin:</h4>
+        <p>@ViewData["Ciphertext"]</p>
+    </div>
+}
+
+<h3>Şifre Çözme</h3>
+<form asp-controller="Rota" asp-action="Decrypt" method="post">
+    <div class="form-group">
+        <label for="ciphertext">Şifreli Metin:</label>
+        <input type="text" class="form-control" id="ciphertext" name="ciphertext" required>
+    </div>
+    <div class="form-group">
+        <label for="key">Anahtar:</label>
+        <input type="number" class="form-control" id="key" name="key" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Şifreyi Çöz</button>
+</form>
+
+@if (ViewData["Plaintext"] != null)
+{
+    <div class="mt-3">
+        <h4>Çözülmüş Metin:</h4>
+        <p>@ViewData["Plaintext"]</p>
+    </div>
+}
