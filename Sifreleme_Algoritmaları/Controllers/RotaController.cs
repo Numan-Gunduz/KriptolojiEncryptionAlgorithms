@@ -41,7 +41,7 @@ namespace SifrelemeAlgoritmalari.Controllers
 					if (index < plaintext.Length)
 						matrix[i, j] = plaintext[index++];
 					else
-						matrix[i, j] = 'X'; // Boş kalan yerleri 'X' ile dolduruyoruz.
+						matrix[i, j] = 'X'; // Boş kalan yerleri 'X' ile doldurdum dolgu karakteri olarak x seçtim 
 				}
 			}
 
@@ -52,7 +52,7 @@ namespace SifrelemeAlgoritmalari.Controllers
 				{
 					ciphertext.Append(matrix[i, j]);
 				}
-			}
+			}	
 
 			ViewData["Ciphertext"] = ciphertext.ToString();
 			return View("Index");

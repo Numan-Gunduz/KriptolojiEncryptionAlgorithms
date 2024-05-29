@@ -1,33 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Sezar Şifreleme";
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Sezar Şifreleme</h1>
+<h1>Lineer Affine Şifreleme</h1>
 
-<form asp-controller="Sezar" asp-action="Encrypt" method="post">
+<form asp-controller="LinearAffine" asp-action="Encrypt" method="post">
     <div class="form-group">
         <label for="inputText">Metin:</label>
         <textarea class="form-control" id="inputText" name="inputText" rows="3"></textarea>
     </div>
     <div class="form-group">
-        <label for="key">Anahtar:</label>
-        <input type="number" class="form-control" id="key" name="key" min="0" value="3" required>
+        <label for="a">a Değeri:</label>
+        <input type="number" class="form-control" id="a" name="a" required>
+    </div>
+    <div class="form-group">
+        <label for="b">b Değeri:</label>
+        <input type="number" class="form-control" id="b" name="b" required>
     </div>
     <button type="submit" class="btn btn-primary">Şifrele</button>
 </form>
-<h2>Deşifrele</h2>
-<form asp-controller="Sezar" asp-action="Decrypt" method="post">
+<form asp-controller="LinearAffine" asp-action="Decrypt" method="post">
     <div class="form-group">
-        <label for="encryptedText">Şifrelenmiş Metin:</label>
+        <label for="encryptedText">Şifreli Metin:</label>
         <textarea class="form-control" id="encryptedText" name="encryptedText" rows="3"></textarea>
     </div>
     <div class="form-group">
-        <label for="decryptionKey">Anahtar:</label>
-        <input type="number" class="form-control" id="decryptionKey" name="key" min="0" required>
+        <label for="a">a Değeri:</label>
+        <input type="number" class="form-control" id="a" name="a" required>
+    </div>
+    <div class="form-group">
+        <label for="b">b Değeri:</label>
+        <input type="number" class="form-control" id="b" name="b" required>
     </div>
     <button type="submit" class="btn btn-primary">Deşifrele</button>
 </form>
-<!-- Hata Mesajı -->
+
+
 @if (ViewData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger mt-3" role="alert">
@@ -35,7 +45,6 @@
     </div>
 }
 
-<!-- Şifrelenmiş Metin ve Deşifrelenmiş Metin -->
 @if (ViewData["EncryptedText"] != null)
 {
     <div class="mt-3">

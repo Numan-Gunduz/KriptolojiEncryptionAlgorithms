@@ -70,7 +70,7 @@ namespace SifrelemeAlgoritmalari.Controllers
 			return true;
 		}
 
-		private string EncryptText(string inputText, int key)
+		private string EncryptText(string inputText, int key=3)
 		{
 			StringBuilder result = new StringBuilder();
 
@@ -93,7 +93,7 @@ namespace SifrelemeAlgoritmalari.Controllers
 			return result.ToString();
 		}
 
-		private string DecryptText(string encryptedText, int key)
+		private string DecryptText(string encryptedText, int key=3)
 		{
 			StringBuilder result = new StringBuilder();
 

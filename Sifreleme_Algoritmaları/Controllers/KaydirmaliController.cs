@@ -9,7 +9,7 @@ namespace Sifreleme_Algoritmaları.Controllers
 		private const string TurkceAlfabeBuyuk = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
 		private const string TurkceAlfabeKucuk = "abcçdefgğhıijklmnoöprsştuüvyz";
 		private const int AlfabeBoyutu = 29;
-
+		//metni alıuyoruz alfabedeki indexe göre kaydırma işlemi yapıyrouz
 		public IActionResult Index()
 		{
 			return View();

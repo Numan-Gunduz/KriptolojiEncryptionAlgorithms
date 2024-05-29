@@ -29,7 +29,7 @@ namespace Sifreleme_Algoritmaları.Controllers
 
 			if (!ContainsOnlyLetters(inputText) || !ContainsOnlyLetters(key))
 			{
-				ViewData["ErrorMessage"] = "Metin ve anahtar yalnızca harfler içermelidir.";
+				ViewData["ErrorMessage"] = "Metin yalnızca harfler içermelidir.";
 				return View("Index");
 			}
 
