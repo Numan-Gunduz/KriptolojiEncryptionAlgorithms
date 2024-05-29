@@ -4,77 +4,116 @@ using System.Text;
 
 namespace SifrelemeAlgoritmalari.Controllers
 {
-    public class RotaController : Controller
-    {
-        public IActionResult Index()
-        {
-            return View();
-        }
+	public class RotaController : Controller
+	{
+		private const string TurkishAlphabet = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
 
-        [HttpPost]
-        public IActionResult Encrypt(string plaintext, int key)
-        {
-            plaintext = plaintext.ToLower();
+		public IActionResult Index()
+		{
+			return View();
+		}
 
-            int rows = (int)Math.Ceiling((double)plaintext.Length / key);
+		[HttpPost]
+		public IActionResult Encrypt(string plaintext, int key)
+		{
+			if (string.IsNullOrEmpty(plaintext))
+			{
+				ViewData["ErrorMessage"] = "Lütfen bir metin girin.";
+				return View("Index");
+			}
 
-            char[,] matrix = new char[rows, key];
-            int index = 0;
-            for (int i = rows - 1; i >= 0; i--)
-            {
-                for (int j = key - 1; j >= 0; j--)
-                {
-                    if (index < plaintext.Length)
-                        matrix[i, j] = plaintext[index++];
-                    else
-                        matrix[i, j] = 'x';
-                }
-            }
+			if (!ContainsOnlyLetters(plaintext))
+			{
+				ViewData["ErrorMessage"] = "Metin yalnızca harfler içermelidir.";
+				return View("Index");
+			}
 
-            string ciphertext = "";
-            for (int j = key - 1; j >= 0; j--)
-            {
-                for (int i = 0; i < rows; i++)
-                {
-                    ciphertext += matrix[i, j];
-                }
-            }
+			plaintext = plaintext.ToUpper(); // Harfleri büyük yapıyoruz çünkü Türk alfabesini büyük harflerle kullanıyoruz.
 
-            ViewData["Ciphertext"] = ciphertext;
-            return View("Index");
-        }
+			int rows = (int)Math.Ceiling((double)plaintext.Length / key);
+			char[,] matrix = new char[rows, key];
 
-        [HttpPost]
-        public IActionResult Decrypt(string ciphertext, int key)
-        {
-            ciphertext = ciphertext.ToLower();
+			int index = 0;
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < key; j++)
+				{
+					if (index < plaintext.Length)
+						matrix[i, j] = plaintext[index++];
+					else
+						matrix[i, j] = 'X'; // Boş kalan yerleri 'X' ile dolduruyoruz.
+				}
+			}
 
-            int rows = (int)Math.Ceiling((double)ciphertext.Length / key);
+			StringBuilder ciphertext = new StringBuilder();
+			for (int j = 0; j < key; j++)
+			{
+				for (int i = rows - 1; i >= 0; i--)
+				{
+					ciphertext.Append(matrix[i, j]);
+				}
+			}
 
-            char[,] matrix = new char[rows, key];
-            int index = 0;
-            for (int j = 0; j < key; j++)
-            {
-                for (int i = rows - 1; i >= 0; i--)
-                {
-                    if (index < ciphertext.Length)
-                        matrix[i, j] = ciphertext[index++];
-                    else
-                        matrix[i, j] = ' ';
-                }
-            }
+			ViewData["Ciphertext"] = ciphertext.ToString();
+			return View("Index");
+		}
 
-            string plaintext = "";
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < key; j++)
-                {
-                    plaintext += matrix[i, j];
-                }
-            }
+		[HttpPost]
+		public IActionResult Decrypt(string ciphertext, int key)
+		{
+			if (string.IsNullOrEmpty(ciphertext))
+			{
+				ViewData["ErrorMessage"] = "Lütfen bir metin girin.";
+				return View("Index");
+			}
 
-            ViewData["Plaintext"] = plaintext.Trim();
-            return View("Index");
-        }
-    }
+			if (!ContainsOnlyLetters(ciphertext))
+			{
+				ViewData["ErrorMessage"] = "Metin yalnızca harfler içermelidir.";
+				return View("Index");
+			}
+
+			ciphertext = ciphertext.ToUpper(); // Harfleri büyük yapıyoruz çünkü Türk alfabesini büyük harflerle kullanıyoruz.
+
+			int rows = (int)Math.Ceiling((double)ciphertext.Length / key);
+			char[,] matrix = new char[rows, key];
+
+			int index = 0;
+			for (int j = 0; j < key; j++)
+			{
+				for (int i = rows - 1; i >= 0; i--)
+				{
+					if (index < ciphertext.Length)
+						matrix[i, j] = ciphertext[index++];
+				}
+			}
+
+			StringBuilder plaintext = new StringBuilder();
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < key; j++)
+				{
+					if (matrix[i, j] != 'X')
+					{
+						plaintext.Append(matrix[i, j]);
+					}
+				}
+			}
+
+			ViewData["Plaintext"] = plaintext.ToString();
+			return View("Index");
+		}
+
+		private bool ContainsOnlyLetters(string text)
+		{
+			foreach (char c in text)
+			{
+				if (!TurkishAlphabet.Contains(char.ToUpper(c)))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 }

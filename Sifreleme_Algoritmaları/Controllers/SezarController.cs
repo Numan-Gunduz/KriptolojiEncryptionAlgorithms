@@ -1,96 +1,119 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Text;
 
 namespace SifrelemeAlgoritmalari.Controllers
 {
-    public class SezarController : Controller
-    {
-        private const string TurkishAlphabet = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
+	public class SezarController : Controller
+	{
+		private const string TurkishAlphabet = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+		public IActionResult Index()
+		{
+			return View();
+		}
 
-        [HttpPost]
-        public IActionResult Encrypt(string inputText, int key)
-        {
-            if (string.IsNullOrEmpty(inputText))
-            {
-                ViewData["ErrorMessage"] = "Lütfen bir metin girin.";
-                return View("Index");
-            }
+		[HttpPost]
+		public IActionResult Encrypt(string inputText, int key)
+		{
+			if (string.IsNullOrEmpty(inputText))
+			{
+				ViewData["ErrorMessage"] = "Lütfen bir metin girin.";
+				return View("Index");
+			}
 
-            string encryptedText = EncryptText(inputText, key);
-            ViewData["EncryptedText"] = encryptedText;
+			if (!ContainsOnlyLetters(inputText))
+			{
+				ViewData["ErrorMessage"] = "Metin yalnızca harfler içermelidir.";
+				return View("Index");
+			}
 
-            // Eklenen kısım: Deşifreleme için şifrelenmiş metni de View üzerinden gönderiyoruz.
-            string decryptedText = DecryptText(encryptedText, key);
-            ViewData["DecryptedText"] = decryptedText;
+			string encryptedText = EncryptText(inputText, key);
+			ViewData["EncryptedText"] = encryptedText;
 
-            return View("Index");
-        }
+			// Eklenen kısım: Deşifreleme için şifrelenmiş metni de View üzerinden gönderiyorum
+			string decryptedText = DecryptText(encryptedText, key);
+			ViewData["DecryptedText"] = decryptedText;
 
-        private string EncryptText(string inputText, int key)
-        {
-            StringBuilder result = new StringBuilder();
+			return View("Index");
+		}
 
-            foreach (char character in inputText)
-            {
-                if (char.IsLetter(character))
-                {
-                    char baseChar = char.IsUpper(character) ? 'A' : 'a';
-                    int index = TurkishAlphabet.IndexOf(char.ToUpper(character));
-                    int shiftedIndex = (index + key) % TurkishAlphabet.Length;
-                    char shiftedChar = TurkishAlphabet[shiftedIndex];
-                    result.Append(char.IsLower(character) ? char.ToLower(shiftedChar) : shiftedChar);
-                }
-                else
-                {
-                    result.Append(character);
-                }
-            }
+		[HttpPost]
+		public IActionResult Decrypt(string encryptedText, int key)
+		{
+			if (string.IsNullOrEmpty(encryptedText))
+			{
+				ViewData["ErrorMessage"] = "Lütfen bir metin girin.";
+				return View("Index");
+			}
 
-            return result.ToString();
-        }
+			if (!ContainsOnlyLetters(encryptedText))
+			{
+				ViewData["ErrorMessage"] = "Metin yalnızca harfler içermelidir.";
+				return View("Index");
+			}
 
+			string decryptedText = DecryptText(encryptedText, key);
+			ViewData["DecryptedText"] = decryptedText;
 
-        [HttpPost]
-        public IActionResult Decrypt(string encryptedText, int key)
-        {
-            if (string.IsNullOrEmpty(encryptedText))
-            {
-                ViewData["ErrorMessage"] = "Lütfen bir metin girin.";
-                return View("Index");
-            }
+			return View("Index");
+		}
 
-            string decryptedText = DecryptText(encryptedText, key);
-            ViewData["DecryptedText"] = decryptedText;
+		private bool ContainsOnlyLetters(string text)
+		{
+			foreach (char c in text)
+			{
+				if (!char.IsLetter(c))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
 
-            return View("Index");
-        }
-        private string DecryptText(string encryptedText, int key)
-        {
-            StringBuilder result = new StringBuilder();
+		private string EncryptText(string inputText, int key)
+		{
+			StringBuilder result = new StringBuilder();
 
-            foreach (char character in encryptedText)
-            {
-                if (char.IsLetter(character))
-                {
-                    char baseChar = char.IsUpper(character) ? 'A' : 'a';
-                    int index = TurkishAlphabet.IndexOf(char.ToUpper(character));
-                    int shiftedIndex = (index - key + TurkishAlphabet.Length) % TurkishAlphabet.Length; // Deşifreleme işlemi, şifreleme işleminin tersi olarak anahtardan çıkarıyoruz.
-                    char shiftedChar = TurkishAlphabet[shiftedIndex];
-                    result.Append(char.IsLower(character) ? char.ToLower(shiftedChar) : shiftedChar);
-                }
-                else
-                {
-                    result.Append(character);
-                }
-            }
+			foreach (char character in inputText)
+			{
+				if (char.IsLetter(character))
+				{
+					char baseChar = char.IsUpper(character) ? 'A' : 'a';
+					int index = TurkishAlphabet.IndexOf(char.ToUpper(character));
+					int shiftedIndex = (index + key) % TurkishAlphabet.Length;
+					char shiftedChar = TurkishAlphabet[shiftedIndex];
+					result.Append(char.IsLower(character) ? char.ToLower(shiftedChar) : shiftedChar);
+				}
+				else
+				{
+					result.Append(character);
+				}
+			}
 
-            return result.ToString();
-        }
-    }
+			return result.ToString();
+		}
+
+		private string DecryptText(string encryptedText, int key)
+		{
+			StringBuilder result = new StringBuilder();
+
+			foreach (char character in encryptedText)
+			{
+				if (char.IsLetter(character))
+				{
+					char baseChar = char.IsUpper(character) ? 'A' : 'a';
+					int index = TurkishAlphabet.IndexOf(char.ToUpper(character));
+					int shiftedIndex = (index - key + TurkishAlphabet.Length) % TurkishAlphabet.Length;
+					char shiftedChar = TurkishAlphabet[shiftedIndex];
+					result.Append(char.IsLower(character) ? char.ToLower(shiftedChar) : shiftedChar);
+				}
+				else
+				{
+					result.Append(character);
+				}
+			}
+
+			return result.ToString();
+		}
+	}
 }
